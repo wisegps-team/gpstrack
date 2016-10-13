@@ -10,18 +10,7 @@ else
 	// W.include("https://maps.googleapis.com/maps/api/js?key=AIzaSyDPwroSpXMst_Esu2GUnw5K_6LTS4wuNBc&callback=__WMap_mapInit");
 
 //类构造
-function WMap(id,lat,lon,zoom){
-	// lat=lat||116.417854;
-	// lon=lon||39.921988;
-	// zoom=zoom||15;
-	var map = new BMap.Map(id);//地图实例化
-	// map.centerAndZoom(new BMap.Point(lat,lon),zoom);
-    //控件
-    // var zoomControl = new BMap.NavigationControl({type:BMAP_NAVIGATION_CONTROL_ZOOM,anchor:BMAP_ANCHOR_BOTTOM_RIGHT,offset: new BMap.Size(5, 20)});
-    // map.addControl(zoomControl);//添加缩放控件
-    // map.addEventListener("tilesloaded", function(){W(".anchorBL").style.display="none";});//隐藏地图底部文字
-    // Object.assign(map,WMap.prototype);
-    return map
+function WMap(){
 }
 
 //异步加载百度地图需要一个全局方法，以供类似jsonp方式的使用

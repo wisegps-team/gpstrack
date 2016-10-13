@@ -11,28 +11,28 @@ import Input from '../_component/base/input';
 const styles={
     bottomBtn:{width:'100%',display:'block',textAlign:'right',padding:'10px'},
 }
-
+const initState={
+    name:'',
+    uid:_user.customer.objectId,
+    brand:'',
+    brandId:'',
+    model:'',
+    modelId:'',
+    type:'',
+    typeId:'',
+    frameNo:'',
+    engineNo:'',
+    buyDate:'',
+    mileage:'',
+    maintainMileage:'',
+    insuranceExpireIn:'',
+    inspectExpireIn:'',
+    departId:0,
+}
 class AddCar extends React.Component{
     constructor(props,context){
         super(props,context);
-        this.state={
-            name:'',
-            uid:_user.customer.objectId,
-            brand:'',
-            brandId:'',
-            model:'',
-            modelId:'',
-            type:'',
-            typeId:'',
-            frameNo:'',
-            engineNo:'',
-            buyDate:'',
-            mileage:'',
-            maintainMileage:'',
-            insuranceExpireIn:'',
-            inspectExpireIn:'',
-            departId:0,
-        }
+        this.state=initState;
         this.brandData={};
 
         this.changeNum=this.changeNum.bind(this);
@@ -49,6 +49,24 @@ class AddCar extends React.Component{
         this.submit=this.submit.bind(this);
         this.cancel = this.cancel.bind(this);
     }
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.isEdit){
+            let data=nextProps.data;
+            this.brandData={
+                brand:data.brand,
+                brandId:data.brandId,
+                serie:data.model,
+                serieId:data.modelId,
+                type:data.type,
+                typeId:data.typeId,
+            }
+            data.buyDate=new Date(data.buyDate);
+            data.inspectExpireIn=new Date(data.inspectExpireIn);
+            data.insuranceExpireIn=new Date(data.insuranceExpireIn);
+            this.setState(data);
+        }
+    }
+    
     changeNum(e,name){
         this.setState({name:name});
     }
@@ -135,62 +153,69 @@ class AddCar extends React.Component{
             alert(___.car_depart+' '+___.not_null);
             return;
         }
-        this.addData(this.state);
+        if(this.props.isEdit){
+            this.editData(this.state);
+        }else{
+            this.addData(this.state);
+        }
+        
     }
     cancel(){
         this.props.cancel();
     }
+    editData(state){
+        let data=Object.assign({},state);
+        data._objectId=data.objectId;
+        data.buyDate=W.dateToString(data.buyDate).slice(0,10);//提交的时候转换日期格式
+        data.insuranceExpireIn=W.dateToString(data.insuranceExpireIn).slice(0,10);
+        data.inspectExpireIn=W.dateToString(data.inspectExpireIn).slice(0,10);
+        delete data.objectId;
+
+        Wapi.vehicle.update(res=>{
+            this.brandData={};
+            this.setState(initState);//添加成功后重置state里面的内容
+            this.props.editSubmit(data);
+        },data);
+    }
     addData(state){
-        let data=state;
+        let data=Object.assign({},state);
         data.buyDate=W.dateToString(data.buyDate).slice(0,10);//提交的时候转换日期格式
         data.insuranceExpireIn=W.dateToString(data.insuranceExpireIn).slice(0,10);
         data.inspectExpireIn=W.dateToString(data.inspectExpireIn).slice(0,10);
 
         Wapi.vehicle.add(res=>{
             this.brandData={};
-            this.setState({//添加成功后重置state里面的内容
-                name:'',
-                uid:_user.customer.objectId,
-                brand:'',
-                brandId:'',
-                model:'',
-                modelId:'',
-                type:'',
-                typeId:'',
-                frameNo:'',
-                engineNo:'',
-                buyDate:'',
-                mileage:'',
-                maintainMileage:'',
-                insuranceExpireIn:'',
-                inspectExpireIn:'',
-                departId:0,
-            });
+            this.setState(initState);//添加成功后重置state里面的内容
+            data.objectId=res.objectId;
             this.props.success(data);
         },data);
     }
     render(){
+        let data=this.state;
+        // data.buyDate=new Date(data.buyDate);
+        // data.inspectExpireIn=new Date(data.inspectExpireIn);
+        // data.insuranceExpireIn=new Date(data.insuranceExpireIn);
         return(
             <div style={this.props.style||{paddingTop:'0px'}}>
                 <div style={{paddingLeft:'1.5em',paddingRight:'1.5em'}} >
-                    <Input floatingLabelText={___.carNum} id='name' onChange={this.changeNum} value={this.state.name} />
+                    <Input floatingLabelText={___.carNum} id='name' onChange={this.changeNum} value={data.name} />
                     <CarBrand id='carBrand' value={this.brandData} onChange={res=>this.changeBrand(res)}/>
-                    <Input floatingLabelText={___.frame_no} id='frameNo' onChange={this.changeFrame} value={this.state.frameNo} />
-                    <Input floatingLabelText={___.engine_no} id='engineNo' onChange={this.changeEngine} value={this.state.engineNo} />
+                    <Input floatingLabelText={___.frame_no} id='frameNo' onChange={this.changeFrame} value={data.frameNo} />
+                    <Input floatingLabelText={___.engine_no} id='engineNo' onChange={this.changeEngine} value={data.engineNo} />
                     <DatePicker 
                         id='buyDate' 
-                        value={this.state.buyDate} 
+                        value={data.buyDate} 
                         floatingLabelText={___.buy_date}
                         hintText={___.please_pick_date}
                         onChange={this.changeBuyDate}
                         okLabel={___.ok}
                         cancelLabel={___.cancel}
                     />
-                    <Input floatingLabelText={___.mileage} id='mileage' onChange={this.changeMileage} value={this.state.mileage} />
-                    <Input floatingLabelText={___.maintain_mileage} id='maintainMileage' onChange={this.changeMaintainMileage} value={this.state.maintainMileage} />
+                    <Input floatingLabelText={___.mileage} id='mileage' onChange={this.changeMileage} value={data.mileage} />
+                    <Input floatingLabelText={___.maintain_mileage} id='maintainMileage' onChange={this.changeMaintainMileage} value={data.maintainMileage} />
                     <DatePicker 
                         id='insuranceExpireIn' 
-                        value={this.state.insuranceExpireIn}
+                        value={data.insuranceExpireIn}
                         floatingLabelText={___.insurance_expire}
                         hintText={___.please_pick_date}
                         onChange={this.changeInsuranceExpiry}
@@ -199,7 +224,7 @@ class AddCar extends React.Component{
                     />
                     <DatePicker 
                         id='inspectExpireIn' 
-                        value={this.state.inspectExpireIn}
+                        value={data.inspectExpireIn}
                         floatingLabelText={___.inspect_expireIn}
                         hintText={___.please_pick_date}
                         onChange={this.changeCheckExpiry}
@@ -207,7 +232,7 @@ class AddCar extends React.Component{
                         cancelLabel={___.cancel}
                     />
                     <p style={{fontSize:'0.75em', color:'rgba(0, 0, 0, 0.498039)'}}>{___.car_depart}</p>
-                    <DepartmentSelcet value={this.state.departId}  onChange={this.changeDepartment}/>
+                    <DepartmentSelcet value={data.departId}  onChange={this.changeDepartment}/>
                 </div>
                 <div style={styles.bottomBtn}>
                     <FlatButton

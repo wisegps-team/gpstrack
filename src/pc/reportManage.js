@@ -20,6 +20,7 @@ import WTable from '../_component/table';
 import APP from '../_component/pc/app';
 import Input from '../_component/base/input';
 import Page from '../_component/base/page';
+import CarSearch from '../_component/car_search';
 
 let SelectableList = MakeSelectable(List);
 
@@ -134,8 +135,8 @@ class App extends React.Component {
     componentDidMount(){
         Wapi.device.list(res=>{
             if(res.total==0)return;
-            console.log(res);
             _devices=res.data;
+            this.forceUpdate();
         },{
             uid:_user.customer.objectId
         },{
@@ -235,8 +236,9 @@ class Filters extends React.Component{
     typeChange(e,value,selected){
         this.setState({alert_type:selected});
     }
-    carNumChange(e,value){
-        this.setState({car_num:value});
+    carNumChange(car){
+        console.log(car);
+        this.setState({car_num:car.name});
     }
     startDateChange(e,value){
         this.setState({start_date:value});
@@ -272,9 +274,9 @@ class Filters extends React.Component{
                                 {typeItems}
                             </SelectField>
                         </td>
-                        <td >{___.carNum}</td>
+                        <td style={{paddingTop:'1em'}}>{___.carNum}</td>
                         <td >
-                            <TextField style={styles.input_margin} value={this.state.car_num} name='carnum' onChange={this.carNumChange} />
+                            <CarSearch style={{marginLeft:'1em',position:'relative'}} onChange={this.carNumChange} data={{uid:_user.customer.objectId}}/>
                         </td>
                     </tr>
 
@@ -365,8 +367,8 @@ class HistoryReports extends React.Component{
         this.getRecords=this.getRecords.bind(this);
         this.changePage=this.changePage.bind(this);
     }
-    componentDidMount(){
-        this.getRecords();
+    componentWillMount(){
+        this.getRecords(this.props.params);
     }
     componentWillReceiveProps(nextProps){
         this.getRecords(nextProps.params);
