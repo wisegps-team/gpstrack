@@ -10,6 +10,9 @@ import {ThemeProvider} from '../_theme/default';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import APP from '../_component/pc/app';
 import Page from '../_component/base/page';
+import DeviceIn from '../_component/device_in';
+import Fab from '../_component/base/fab';
+import SonPage from '../_component/base/sonPage';
 
 
 window.addEventListener('load',function(){
@@ -48,6 +51,9 @@ class App extends React.Component {
             total_page:0,
         }
         this.changePage=this.changePage.bind(this);
+        this.deviceIn=this.deviceIn.bind(this);
+        this.toList=this.toList.bind(this);
+        this.add = this.add.bind(this);
     }
 
     componentDidMount(){
@@ -64,11 +70,13 @@ class App extends React.Component {
             limit:this.state.limit,
         });
 
-        //测试用数据
-        // this.setState({
-        //     devices:_devices.slice(0,this.state.limit),
-        //     total_page:Math.ceil(_devices.length/this.state.limit)
-        // });
+        window.addEventListener('add_device',this.add);
+    }
+    componentWillUnmount() {
+        window.removeEventListener('add_device',this.add);
+    }
+    add(e){
+        this.setState({data:this.state.data.concat(e.params)});
     }
     changePage(no){
         Wapi.device.list(res=>{
@@ -92,6 +100,13 @@ class App extends React.Component {
         // });
     }
 
+    deviceIn(){
+        history.replaceState('home','home','home.html');
+        this.setState({intent:'in'});
+    }
+    toList(){
+        this.setState({intent:'list'});
+    }
     render() {
         let deviceItems = this.state.devices.map(ele=>{
             let isOnline=___.offline;
@@ -130,6 +145,10 @@ class App extends React.Component {
                         </TableBody>
                     </Table>
                     <Page curPage={this.state.page_no} totalPage={this.state.total_page} changePage={this.changePage} />
+                    <Fab onClick={this.deviceIn}/>
+                    <SonPage open={this.state.intent=='in'} back={this.toList}>
+                        <DeviceIn toList={this.toList}/>
+                    </SonPage>
                 </div>
             </APP>
         );

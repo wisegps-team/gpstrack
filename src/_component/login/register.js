@@ -16,10 +16,10 @@ class Register extends Component {
     constructor(props, context) {
         super(props, context);
         this.state={
-            account:null
+            account:null,
+            accountType:'phone' //表示是用什么注册
         }
         this.formData={
-            mobile:null,
             valid_code:null,
             password:null,
             valid_type:1
@@ -44,15 +44,26 @@ class Register extends Component {
             }
         }
         let data=Object.assign({},this.formData);
+        if(!data.mobile&&!data.email){
+            W.alert('email or mobile'+___.not_null);
+            return;
+        }
         if(!this.props.beforRegister||this.props.beforRegister(data))
             Wapi.user.register(this.success,data);
     }
 
     accountChange(e,val){
-        let reg=/^[1][3578][0-9]{9}$/;
-        if(reg.test(val)){
+        let phoneReg=/^[1][3578][0-9]{9}$/;
+        let emailReg=/^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/;
+        if(phoneReg.test(val)){
             this.formData['mobile']=val;  
-            this.setState({account:val}); 
+            delete this.formData.email;
+            this.setState({account:val,accountType:'mobile'}); 
+        }else if(emailReg.test(val)){
+            //邮箱注册
+            this.formData['email']=val;
+            delete this.formData.mobile;
+            this.setState({account:val,accountType:'email'}); 
         }
     }
     change(val,name){
@@ -71,6 +82,7 @@ class Register extends Component {
                 <VerificationCode 
                     name='valid_code'
                     type={1}
+                    accountType={this.state.accountType}
                     account={this.state.account} 
                     onSuccess={this.change}
                 />

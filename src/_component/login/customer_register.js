@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 
 import Register from './register';
-import AreaSelect from '../base/areaSelect';
 import Input from '../base/input';
 import SexRadio from '../base/sexRadio';
 
@@ -31,10 +30,6 @@ class CustomerRegisterBox extends Component{
     beforRegister(data){
         if(!this.data.name){
             W.alert(___.user_name_empty);
-            return false;
-        }
-        if(!this.data.cityId){
-            W.alert(___.area_empty);
             return false;
         }
         if(!this.data.contact){
@@ -98,7 +93,7 @@ class CustomerRegisterBox extends Component{
                 });
             }
         },{
-            account:user.mobile,
+            account:user.mobile||user.email||user.username,
             password:user.password
         });
     }
@@ -118,7 +113,6 @@ class CustomerRegisterBox extends Component{
             <div>
                 <form>
                     <Input name='name' floatingLabelText={___.company_name} onChange={this.nameChange}/>
-                    <AreaSelect name='area' onChange={this.change}/>
                     <Input name='contact' floatingLabelText={___.person} onChange={this.nameChange}/>
                     <SexRadio onChange={this.change}/>
                 </form>

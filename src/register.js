@@ -43,7 +43,7 @@ class App extends Component {
         return (
             <ThemeProvider>
                 <div className='login' style={{padding:'10px 10%'}}>
-                    <CustomerRegisterBox success={this.registerCallback} parentId={'771277603326791700'} typeId={4}/>
+                    <CustomerRegisterBox success={this.registerCallback} parentId={'0'} typeId={4}/>
                     <div style={{
                         textAlign: 'right',
                         marginTop: '10px'

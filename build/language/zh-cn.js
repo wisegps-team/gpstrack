@@ -42,7 +42,7 @@ window.___={
 	'reset_pwd':'重置密码',
 	'pwd_input_err':'密码不符合格式',
 	'two_pwd_err':'两次输入的密码不一致',
-	'not_null':'不能为空',
+	'not_null':'不正确',
 	'getCode':'获取验证码',
 	'input_code':'请输入验证码',
 	'code_err':'验证码错误',

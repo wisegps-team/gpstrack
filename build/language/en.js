@@ -42,7 +42,7 @@ window.___={
     'reset_pwd':'Reset Password',
     'pwd_input_err':'Password is wrong',
     'two_pwd_err':'Confirm password is wrong',
-    'not_null':'Cannot be empty',
+    'not_null':'error',
     'getCode':'Get PIN',
     'input_code':'Input PIN',
     'code_err':'PIN is wrong',

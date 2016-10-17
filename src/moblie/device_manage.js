@@ -21,8 +21,8 @@ import STORE from '../_reducers/main';
 import BrandSelect from'../_component/base/brandSelect';
 import SonPage from '../_component/base/sonPage';
 import AutoList from '../_component/autoList';
+import DeviceIn from '../_component/device_in';
 
-import {reCode} from '../_modules/tool';
 
 
 var thisView=window.LAUNCHER.getView();//第一句必然是获取view
@@ -33,22 +33,8 @@ thisView.addEventListener('load',function(){
         <AppDeviceManage/>,thisView);
 });
 
-//测试用
-// W.native={
-//     scanner:{
-//         start:function(callback){
-//             setTimeout(function(){
-//                 callback('code,56621886168');
-//             },100);
-//         }
-//     }
-// }
-// let isWxSdk=true;
 
-let isWxSdk=false;
-if(W.native)isWxSdk=true;
-else
-    window.addEventListener('nativeSdkReady',()=>{isWxSdk=true;});
+
 
 //测试用数据
 // let _device={
@@ -149,13 +135,22 @@ class DeviceList extends React.Component {
         }
         this.page=1;
         this.loadNextPage = this.loadNextPage.bind(this);
+        this.add = this.add.bind(this);
     }
     
     componentDidMount() {//初始化数据
         Wapi.device.list(res=>this.setState({data:res.data,total:res.total}),{
             uid:_user.customer.objectId
         },Object.assign(op,{page_no:this.page}));
+        window.addEventListener('add_device',this.add);
     }
+    componentWillUnmount() {
+        window.removeEventListener('add_device',this.add);
+    }
+    add(e){
+        this.setState({data:this.state.data.concat(e.params)});
+    }
+    
 
     loadNextPage(){
         //加载下一页的方法
@@ -219,7 +214,6 @@ class AppDeviceManage extends React.Component{
     }
     toList(){
         this.setState({intent:'list'});
-        this.forceUpdate();
     }
 
     render(){
@@ -253,138 +247,4 @@ class AppDeviceManage extends React.Component{
     }
 }
 
-class DeviceIn extends React.Component{
-    constructor(props,context){
-        super(props,context);
-        this.state={
-            brands:[],
-            types:[],
-            brand:'',
-            type:'',
-            brandId:'',
-            typeId:'',
-            product_ids:[],
-        }
-        this.data={}
-        this.brandChange=this.brandChange.bind(this);
-        this.typeChange=this.typeChange.bind(this);
-        this.addId=this.addId.bind(this);
-        this.submit=this.submit.bind(this);
-        this.cancel=this.cancel.bind(this);
-    }
-    componentDidMount(){
-        this.setState({
-            brands:[],
-            types:[],
-            brand:' ',
-            type:' ',
-        });
-    }
-    brandChange(value){
-        this.setState({brand:value.brand,brandId:value.brandId,type:value.product,typeId:value.productId});
-    }
-    typeChange(e,value){
-        this.setState({type:value});
-    }
-    addId(){
-        let _this=this;
-        if(isWxSdk){
-            W.native.scanner.start(function(res){//扫码，did添加到当前用户
-                let code=reCode(res);
-                let arr=_this.state.product_ids;
-                arr[arr.length]=code;
-                _this.setState({product_ids:arr});
-
-                let uid_pre;
-                Wapi.device.get(function(res_pre){//更新之前获取之前获取上一个用户的uid
-                    uid_pre=res_pre.data.uid;
-                    Wapi.customer.get(function(res_preUser){//获取上一个用户的信息
-                        if(res_preUser.data.custTypeId==4){//判断上一个用户是否为普通用户。如果是，则不能分配到当前用户
-                            W.alert(___.error[6]);
-                            return;
-                        } 
-                        Wapi.device.update(function(res_device){//更新设备的uid
-                            Wapi.deviceLog.add(function(res_log){//当前用户添加一条入库记录
-                                W.alert(___.import_success);
-                            },{
-                                uid:_user.customer.objectId,
-                                did:code,
-                                type:1,
-                            });
-                            Wapi.deviceLog.add(function(res_preLog){//给上一个用户添加一条出库记录
-                                
-                            },{
-                                uid:uid_pre,
-                                did:code,
-                                type:0,
-                            });
-                        },{
-                            _did:code,
-                            uid:_user.customer.objectId,
-                        });
-                    },{
-                        objectId:uid_pre
-                    });
-
-                },{
-                    did:code
-                });
-                
-                
-            });
-        }else{
-            W.alert(___.please_wait);
-        }
-    }
-    cancel(){
-        this.setState({
-            brand:' ',
-            type:' ',
-            product_ids:[]
-        });
-        this.props.toList();
-        
-    }
-    submit(){
-        this.cancel();
-    }
-
-    render(){
-        let brands=this.state.brands.map(ele=><MenuItem value={ele.id} key={ele.id} primaryText={ele.brand_name}/>);
-        let types=this.state.types.map(ele=><MenuItem value={ele.id} key={ele.id} primaryText={ele.type}/>);
-        return(
-            <div style={styles.input_page}>
-                <h3>{___.device_in}</h3>
-                <ScanGroup product_ids={this.state.product_ids} addId={this.addId} cancel={this.cancel} submit={this.submit} />
-            </div>
-        )
-    }
-}
-
-class ScanGroup extends React.Component{
-    constructor(props,context){
-        super(props,context);
-    }
-    render(){
-        let productItems=[];
-        let product_ids=this.props.product_ids;
-        let len=product_ids.length;
-        for(let i=0;i<len;i++){
-            productItems.push(
-                <div key={i} style={styles.ids_box}>
-                    {___.device_id} <span style={styles.product_id}>{product_ids[i]}</span>
-                </div>
-            )
-        }
-        return(
-            <div>
-                {productItems}
-                <div style={styles.ids_box}>
-                    <a onClick={this.props.addId} style={styles.scan_input}>{___.scan_input}</a>
-                </div>
-                <RaisedButton style={{marginTop:'1em'}} onClick={this.props.submit} label={___.ok} primary={true}/>
-            </div>
-        )
-    }
-}
 

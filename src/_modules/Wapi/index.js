@@ -312,6 +312,16 @@ WCommApi.prototype.sendSMS=function(callback,mobile,type,content){
 	
 	this.getApi(Data,callback);	
 }
+WCommApi.prototype.sendEmail=function(callback,email,type,content){
+	var Data={
+		method:this.apiName+".email.send",
+		email,
+		type,
+		content
+	};
+	
+	this.getApi(Data,callback);	
+}
 
 //验证验证码
 WCommApi.prototype.validCode=function(callback,data,op){
@@ -617,15 +627,15 @@ function WBaseApi(token){
 WBaseApi.prototype=new WiStormAPI();
 
 //获取车辆品牌列表
-WBaseApi.prototype.carBrand=function(callback){
-	var OP={
+WBaseApi.prototype.carBrand=function(callback,op){
+	var OP=Object.assign({
 		method:'wicare.carBrand.list',
 		fields:'id,pid,name,url_icon,t_spell',
 		id:">0",
 		sorts:'t_spell',
 		page:'t_spell',
 		limit:-1
-	};
+	},op);
 	this.getApi(OP,callback);
 }
 //获取车系列表
@@ -650,7 +660,14 @@ WBaseApi.prototype.carType=function(callback,data){
 		limit:-1
 	};
 	Object.assign(OP,data);
-	this.getApi(OP,callback);
+	this.getApi(OP,function(res){
+		if(res.data)
+			res.data.map(e=>{
+				e.name=e.go_name?e.name+' '+e.go_name:e.name;
+				return e;
+			});
+		callback(res);
+	});
 }
 //经纬度转地址
 WBaseApi.prototype.geocoder=function(callback,data){

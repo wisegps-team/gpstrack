@@ -120,6 +120,8 @@ class Brands extends Component {
             that.data=res.data;
             let brands=that.showBrands(res.data);
             that.setState({brands});
+        },{
+            lang:navigator.language.split('-')[0].toLowerCase()
         });
     }
 
@@ -199,7 +201,8 @@ class Series extends Component {
         if(nextProps.parent!=this.props.parent){
             this.setState({data:[]});
             let data={
-                pid:nextProps.parent
+                pid:nextProps.parent,
+                lang:navigator.language.split('-')[0].toLowerCase()
             }
             if(nextProps.serie)
                 Wapi.base.carSerie(this.setData,data);

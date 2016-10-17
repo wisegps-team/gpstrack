@@ -66,7 +66,7 @@ class App extends Component {
         let min=-Math.floor((W.date(res.data.expire_in).getTime()-new Date().getTime())/60000);
         W.setCookie("access_token", res.data.access_token,min);
         let user=res.data;
-        if(!user.mobileVerified){//未通过手机验证
+        if(!user.mobileVerified&&user.mobile){//未通过手机验证
             W.alert(___.please_verification);
             this._user=user;//先暂存
             this.setState({active:2});
