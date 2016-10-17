@@ -133,6 +133,7 @@ class Brands extends Component {
                 t=ele.t_spell;
                 brands.push(<div key={t} style={{paddingLeft:'10px',fontSize:'18px',fontWeight: 700,backgroundColor:this.context.muiTheme.palette.primary3Color}}>{t}</div>)
             }
+            let imgUrl=(ele.url_icon&&ele.url_icon!='String')?'http://img.wisegps.cn/logo/'+ele.url_icon:'http://h5.bibibaba.cn/baba/wx/img/icon_car_moren.png';
             brands.push(<div 
                 onClick={this.change} 
                 data-id={ele.id} 
@@ -142,7 +143,7 @@ class Brands extends Component {
                 onTouchStart={touchStart} 
                 onTouchEnd={touchEnd}
             >
-                <img src={'http://img.wisegps.cn/logo/'+ele.url_icon} style={sty.a}/>
+                <img src={imgUrl} style={sty.a}/>
                 {ele.name}
             </div>);
         }
