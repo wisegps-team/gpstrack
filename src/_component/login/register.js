@@ -17,7 +17,7 @@ class Register extends Component {
         super(props, context);
         this.state={
             account:null,
-            accountType:'phone' //表示是用什么注册
+            accountType:'mobile' //表示是用什么注册
         }
         this.formData={
             valid_code:null,

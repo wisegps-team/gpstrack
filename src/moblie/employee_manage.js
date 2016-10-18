@@ -46,24 +46,8 @@ const styles={
     bottom_btn_center:{width:'100%',display:'block',textAlign:'center',paddingTop:'2em'},
 }
 
-const _employee={
-    uid:1,
-    departId:1,
-    type:1,
-    name:'小明',
-    sex:1,
-    tel:'1234567890',
-}
-const _employees=[];
-for(let i=0;i<=4;i++){
-    let e=Object.assign({},_employee);
-    e.uid=i;
-    e.tel+=i;
-    _employees.push(e);
-}
+
 const _sex=[___.woman,___.man];
-const _type=['角色A','角色B','角色C'];
-// const _depar=[{name:'部门A',id:1234},'部门B','部门C'];
 
 class App extends React.Component {
     constructor(props, context) {
@@ -103,7 +87,7 @@ class App extends React.Component {
             companyId:_user.customer.objectId,
             isQuit:false
         },{
-            fields:'objectId,uid,companyId,name,tel,sex,departId,type,isQuit',
+            fields:'objectId,uid,companyId,name,email,sex,departId,type,isQuit',
             limit:20
         });
 
@@ -133,7 +117,7 @@ class App extends React.Component {
             let params={
                 _uid:data.uid,
                 name:data.name,
-                tel:data.tel,
+                email:data.email,
                 sex:data.sex,
                 departId:data.departId,
                 type:data.type,
@@ -144,7 +128,7 @@ class App extends React.Component {
                 arr.map(ele=>{
                     if(ele.uid==data.uid){
                         ele.name=params.name;
-                        ele.tel=params.tel;
+                        ele.email=params.email;
                         ele.sex=params.sex;
                         ele.departId=params.departId;
                         ele.type=params.type;
@@ -160,17 +144,18 @@ class App extends React.Component {
             
             let par={
                 userType:9,
-                mobile:data.tel,
+                email:data.email,
                 password:md5(randomStr())
             };
+            let pwd=data.email.split('@')[0];
             if(allowLogin){
-                par.password=md5(data.tel.slice(-6));
+                par.password=md5(pwd);
             }
             Wapi.user.add(function (res) {
                 let params={
                     companyId:_user.customer.objectId,
                     name:data.name,
-                    tel:data.tel,
+                    email:data.email,
                     sex:data.sex,
                     departId:data.departId,
                     type:data.type,
@@ -180,7 +165,7 @@ class App extends React.Component {
                 Wapi.employee.add(function(res){
                     params.objectId=res.objectId;
                     let arr=that.state.employees;
-                    that.setState({employees:arr.unshift(params)});//添加完成后将新增的人员加入人员数组
+                    that.setState({employees:[params].concat(arr)});//添加完成后将新增的人员加入人员数组
                     history.back();//更新数据后返回
 
                     Wapi.role.update(function(role){
@@ -190,13 +175,13 @@ class App extends React.Component {
                             app_name:___.app_name,
                             name:data.name,
                             sex:data.sex?___.sir:___.lady,
-                            account:data.tel,
-                            pwd:data.tel.slice(-6)
+                            account:data.email,
+                            pwd
                         }
                         if(allowLogin){
-                            Wapi.comm.sendSMS(function(res){
+                            Wapi.comm.sendEmail(function(res){
                                 W.errorCode(res);
-                            },data.tel,0,W.replace(sms,tem));
+                            },data.email,0,W.replace(sms,tem));
                         }
                     },{
                         _objectId:'773344067361837000',
@@ -219,7 +204,7 @@ class App extends React.Component {
             companyId:_user.customer.objectId,
             isQuit:false
         },{
-            fields:'objectId,uid,companyId,name,tel,sex,departId,type,isQuit',
+            fields:'objectId,uid,companyId,name,email,sex,departId,type,isQuit',
             limit:20,
             page_no:this.page
         });
@@ -282,8 +267,8 @@ class DumbList extends React.Component{
                             <td style={styles.table_td_right}>{_type[ele.type]}</td>
                         </tr>*/}
                         <tr style={styles.table_tr}>
-                            <td>{___.phone}</td>
-                            <td style={styles.table_td_right}>{ele.tel}</td>
+                            <td>{___.email}</td>
+                            <td style={styles.table_td_right}>{ele.email}</td>
                         </tr>
                     </tbody>
                 </table>

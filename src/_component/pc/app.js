@@ -187,6 +187,7 @@ class Header extends Component{
                         {NavigationItems}
                     </IconMenu>
                 );
+        let account=_user.mobile||_user.email;
         return (
             <AppBar 
                 style={sty.app} 
@@ -199,9 +200,9 @@ class Header extends Component{
                 </div>
                 <div className="top_R">
                     <span>
-                        <span onClick={this.handleOpenMenu}>{_user.mobile}</span>
+                        <span onClick={this.handleOpenMenu}>{account}</span>
                             <IconMenu
-                                iconButtonElement={<IconButton><div>{_user.mobile}</div></IconButton>}
+                                iconButtonElement={<IconButton><div>{account}</div></IconButton>}
                                 anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                                 targetOrigin={{horizontal: 'right', vertical: 'top'}}                        
                                 open={this.state.openMenu}

@@ -59,24 +59,8 @@ const styles={
     bottom_btn_center:{width:'100%',display:'block',textAlign:'center',paddingTop:'2em'},
 };
 
-const _employee={
-    uid:1,
-    departId:1,
-    type:1,
-    name:'小明',
-    sex:1,
-    tel:'1234567890',
-}
-const _employees=[];
-for(let i=0;i<=4;i++){
-    let e=Object.assign({},_employee);
-    e.uid=i;
-    e.tel+=i;
-    _employees.push(e);
-}
+
 const _sex=[___.woman,___.man];
-const _type=['角色A','角色B','角色C'];
-// const _depar=[{name:'部门A',id:1234},'部门B','部门C'];
 
 class App extends React.Component {
     constructor(props, context) {
@@ -96,7 +80,7 @@ class App extends React.Component {
             fabDisplay:'block',
         }
         this.op={
-            fields:'objectId,uid,companyId,name,tel,sex,departId,type,isQuit',
+            fields:'objectId,uid,companyId,name,email,sex,departId,type,isQuit',
             limit:this.state.limit,
             page_no:1
         };
@@ -129,7 +113,7 @@ class App extends React.Component {
         let departIds=departs.map(ele=>ele.objectId);
         let strDepartIds=departIds.join('|');
         this.op={
-            fields:'objectId,uid,companyId,name,tel,sex,departId,type,isQuit',
+            fields:'objectId,uid,companyId,name,email,sex,departId,type,isQuit',
             limit:this.state.limit,
             departId:strDepartIds,
             page_no:1
@@ -161,7 +145,7 @@ class App extends React.Component {
 
         let strDepartIds=departIds.join('|');
         this.op={
-            fields:'objectId,uid,companyId,name,tel,sex,departId,type,isQuit',
+            fields:'objectId,uid,companyId,name,email,sex,departId,type,isQuit',
             limit:this.state.limit,
             departId:strDepartIds,
             page_no:1,
@@ -243,7 +227,7 @@ class App extends React.Component {
             },{
                 _uid:data.uid,
                 name:data.name,
-                tel:data.tel,
+                email:data.email,
                 sex:data.sex,
                 departId:data.departId,
                 type:data.type,
@@ -254,17 +238,18 @@ class App extends React.Component {
 
             let par={
                 userType:9,
-                mobile:data.tel,
+                email:data.email,
                 password:md5(randomStr())
             };
+            let pwd=data.email.split('@')[0];
             if(allowLogin){
-                par.password=md5(data.tel.slice(-6));
+                par.password=md5(pwd);
             }
             Wapi.user.add(function (res) {
                 let params={
                     companyId:_user.customer.objectId,
                     name:data.name,
-                    tel:data.tel,
+                    email:data.email,
                     sex:data.sex,
                     departId:data.departId,
                     type:data.type,
@@ -281,13 +266,13 @@ class App extends React.Component {
                             app_name:___.app_name,
                             name:data.name,
                             sex:data.sex?___.sir:___.lady,
-                            account:data.tel,
-                            pwd:data.tel.slice(-6)
+                            account:data.email,
+                            pwd
                         }
                         if(allowLogin){
-                            Wapi.comm.sendSMS(function(res){
+                            Wapi.comm.sendEmail(function(res){
                                 W.errorCode(res);
-                            },data.tel,0,W.replace(sms,tem));
+                            },data.email,0,W.replace(sms,tem));
                         }
                     },{
                         _objectId:'773344067361837000',
@@ -364,7 +349,7 @@ class EmployeeTable extends React.Component{
                     <TableRowColumn >{_sex[ele.sex]}</TableRowColumn>
                     <TableRowColumn >{_departName}</TableRowColumn>
                     {/*<TableRowColumn >{_type[ele.type]}</TableRowColumn>*/}
-                    <TableRowColumn >{ele.tel}</TableRowColumn>
+                    <TableRowColumn >{ele.email}</TableRowColumn>
                     <TableRowColumn >
                         <ActionInfo onClick={()=>this.props.showDetails(ele)} />
                         {/*<ActionAccountBox onClick={()=>this.props.showDriver(ele)} />
@@ -382,7 +367,7 @@ class EmployeeTable extends React.Component{
                             <TableHeaderColumn >{___.sex}</TableHeaderColumn>
                             <TableHeaderColumn >{___.department}</TableHeaderColumn>
                             {/*<TableHeaderColumn >{___.role}</TableHeaderColumn>*/}
-                            <TableHeaderColumn >{___.phone}</TableHeaderColumn>
+                            <TableHeaderColumn >{___.email}</TableHeaderColumn>
                             <TableHeaderColumn >{___.edit}</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>

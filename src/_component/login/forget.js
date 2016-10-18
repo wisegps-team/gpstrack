@@ -6,7 +6,7 @@ import React, {Component} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import VerificationCode from '../base/verificationCode';
-import PhoneInput from '../base/PhoneInput';
+import EmailInput from '../base/email_input';
 import PasswordRepeat from './password';
 import sty from './style';
 
@@ -52,16 +52,17 @@ constructor(props, context) {
         if(name){
             if(name=='password'||name=='valid_code')
                 this.formData[name]=val;
-        }else{
-            this.formData['account']=val;   
-            this.setState({account:val});         
+        }else if(!name){
+            //邮箱注册
+            this.formData['account']=val;
+            this.setState({account:val}); 
         }
     }
 
     render() {
         return (
             <div {...this.props}>
-                <PhoneInput
+                <EmailInput
                     name='account'
                     hintText={___.input_account}
                     floatingLabelText={___.account}
@@ -72,6 +73,7 @@ constructor(props, context) {
                     name='valid_code'
                     type={2}
                     account={this.state.account} 
+                    accountType={'email'}
                     onSuccess={this.change}
                 />
                 <PasswordRepeat 

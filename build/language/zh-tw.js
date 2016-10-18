@@ -278,5 +278,6 @@ window.___={
     'booked':'該手機號已預訂成功，不可重複預訂',
     'booking_sms':'您有新的業務預訂信息，聯繫人：<%name%>，電話：<%mobile%>，請及時聯繫用戶辦理副卡或流量卡業務。 ',
     'divice_booking':'產品預訂',
-    'please_consult':'如需諮詢,請聯繫客戶經理。 '
+    'please_consult':'如需諮詢,請聯繫客戶經理。 ',
+    'email':'郵箱'
 };

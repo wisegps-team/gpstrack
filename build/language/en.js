@@ -278,5 +278,6 @@ window.___={
     'booked':'This mobile have booked successfully, cannot book again.',
     'booking_sms':'You got new book order, Name: <%name%>, Phone：<%mobile%>，Please contact with customer.',
     'divice_booking':'Product Booking',
-    'please_consult':'For advice, please contact saler。'
+    'please_consult':'For advice, please contact saler。',
+    'email':'E-mail'
 };

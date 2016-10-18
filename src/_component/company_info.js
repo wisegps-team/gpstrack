@@ -42,9 +42,8 @@ class ShowBox extends Component{
         return (
             <Paper zDepth={1} style={sty.p}>
                 <h2>{cust.name}</h2>
-                <p>{___.cust_type+'：'+cust.custType}</p>
                 <p>{___.person+'：'+cust.contact}</p>
-                <p>{___.cellphone+'：'+cust.tel}</p>
+                <p>{___.cellphone+'：'+(cust.tel||'')}</p>
                 <address>{___.address+'：'+(cust.province||'')+(cust.city||'')+(cust.area||'')+(cust.address||'')}</address>
                 <div style={{textAlign:'right',marginTop:'15px'}}>
                     {button}
@@ -96,10 +95,8 @@ class EditBox extends Component{
         return (
             <Paper zDepth={1} style={sty.p}>
                 <Input value={cust.name} name='name' onChange={this.change} hintText={___.name}/>
-                <p>{___.cust_type+'：'+cust.custType}</p>
                 <Input value={cust.contact} name='contact' onChange={this.change} hintText={___.person}/>
                 <Input value={cust.tel} name='tel' onChange={this.change} hintText={___.cellphone}/>                
-                <AreaSelect onChange={this.change} value={area}/>
                 <Input value={cust.address} name='address' onChange={this.change} hintText={___.address}/>                                
                 <div style={{textAlign:'right',marginTop:'15px'}}>
                     <FlatButton label={___.cancel} onClick={this.props.back} default={true} />                

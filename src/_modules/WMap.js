@@ -6,8 +6,8 @@
 if(WiStorm.config.map=='BAIDU')
 	W.include("http://api.map.baidu.com/api?v=2.0&ak=647127add68dd0a3ed1051fd68e78900&callback=__WMap_mapInit");
 else
-	W.include("https://www.google.cn/maps/api/js?key=AIzaSyDPwroSpXMst_Esu2GUnw5K_6LTS4wuNBc&callback=__WMap_mapInit");
-	// W.include("https://maps.googleapis.com/maps/api/js?key=AIzaSyDPwroSpXMst_Esu2GUnw5K_6LTS4wuNBc&callback=__WMap_mapInit");
+	// W.include("https://www.google.cn/maps/api/js?key=AIzaSyDPwroSpXMst_Esu2GUnw5K_6LTS4wuNBc&callback=__WMap_mapInit");
+	W.include("https://maps.googleapis.com/maps/api/js?key=AIzaSyDPwroSpXMst_Esu2GUnw5K_6LTS4wuNBc&callback=__WMap_mapInit");
 
 //类构造
 function WMap(){
@@ -63,12 +63,9 @@ function googleInit(){
 	Object.assign(WMap,google.maps);
 	WMap.Map=class Map extends google.maps.Map {
 		constructor(id) {
-			let lat=116.417854,
-			lng=39.921988,
-			zoom=15;
 			super(document.getElementById(id),{
-				zoom,
-				center:{lat,lng}
+				center: {lat: 39.921988, lng: 116.417854},
+    			zoom: 5
 			});
 
 			this._ove=[];

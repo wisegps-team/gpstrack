@@ -1,5 +1,5 @@
 window.___={
-    "app_name":"沃管车用户平台",
+    "app_name":"车联在线",
 	"ok":"确定",
 	"cancel":"取消",
 	"yes":"是",
@@ -110,8 +110,7 @@ window.___={
 	'submit':'提交',
 	'create_user_su':'创建用户成功',
 	'sms_sended':'验证码已发送至',
-	'cust_sms_content':'［卫网科技］尊敬的<%name%><%sex%>：卫网科技已为您创建管理平台账号，平台网址为http://yun.autogps.cn，登录账号为<%account%>，默认密码为<%pwd%>。',
-	'employee_sms_content':'［<%app_name%>］尊敬的<%name%><%sex%>：卫网科技已为您创建管理平台账号，平台网址为http://wx.autogps.cn，登录账号为<%account%>，默认密码为<%pwd%>。',
+	'employee_sms_content':'［<%app_name%>］尊敬的<%name%><%sex%>：系统已为您创建账号，登录账号为<%account%>，默认密码为<%pwd%>。',
 	'sir':'先生',
 	'lady':'小姐',
 	'province':'省份',
@@ -279,4 +278,5 @@ window.___={
 	'booking_sms':'您有新的业务预订信息，联系人：<%name%>，电话：<%mobile%>，请及时联系用户办理副卡或流量卡业务。',
 	'divice_booking':'产品预订',
 	'please_consult':'如需咨询,请联系客户经理。',
+	'email':'邮箱'
 }

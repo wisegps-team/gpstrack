@@ -68,53 +68,27 @@ class DeviceIn extends Component {
     addId(){
         let _this=this;
         if(isWxSdk){
-            W.native.scanner.start(function(res){//扫码，did添加到当前用户
-                let code=reCode(res);
-                
-                let uid_pre;
-                Wapi.device.get(function(res_pre){//更新之前获取之前获取上一个用户的uid
-                    if(!res_pre.data){
+            W.native.scanner.start(function(did){//扫码，did添加到当前用户
+                let code=reCode(did);
+                Wapi.device.get(function(res_pre){//检查是否已经有这个设备
+                    if(res_pre.data){
                         W.alert(___.please_input_correct_device_num);
                         return;
                     }
-                    let arr=_this.state.product_ids;
-                    arr[arr.length]=code;
-                    _this.setState({product_ids:arr});
-                    uid_pre=res_pre.data.uid;
-                    Wapi.customer.get(function(res_preUser){//获取上一个用户的信息
-                        if(res_preUser.data.custTypeId==4){//判断上一个用户是否为普通用户。如果是，则不能分配到当前用户
-                            W.alert(___.error[6]);
-                            return;
-                        } 
-                        Wapi.device.update(function(res_device){//更新设备的uid
-                            Wapi.deviceLog.add(function(res_log){//当前用户添加一条入库记录
-                                W.alert(___.import_success);
-                                W.emit(window,'add_device',res_pre.data);
-                            },{
-                                uid:_user.customer.objectId,
-                                did:code,
-                                type:1,
-                            });
-                            Wapi.deviceLog.add(function(res_preLog){//给上一个用户添加一条出库记录
-                                
-                            },{
-                                uid:uid_pre,
-                                did:code,
-                                type:0,
-                            });
-                        },{
-                            _did:code,
-                            uid:_user.customer.objectId,
-                        });
+                    Wapi.device.add(function(res){
+                        W.alert(___.import_success);
+                        W.emit(window,'add_device',res_pre.data);
                     },{
-                        objectId:uid_pre
+                        did,
+                        uid:_user.customer.objectId,
+                        status: 3,
+                        commType: 'GPRS',
+                        commSign: '',
+                        binded: false
                     });
-
                 },{
                     did:code
                 });
-                
-                
             });
         }else{
             W.alert(___.please_wait);

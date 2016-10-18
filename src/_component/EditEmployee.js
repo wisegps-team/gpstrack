@@ -8,7 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import DatePicker from 'material-ui/DatePicker';
 
 import Input from './base/input';
-import PhoneInput from './base/PhoneInput';
+import EmailInput from './base/email_input';
 import SexRadio from './base/sexRadio';
 import {DepartmentTree,DepartmentSelcet} from'./department_tree';
 
@@ -33,7 +33,7 @@ class EditEmployee extends React.Component{
         this.data={
             uid:'',
             name:'',
-            tel:'',
+            email:'',
             sex:1,
             departId:0,
             type:0,
@@ -42,7 +42,7 @@ class EditEmployee extends React.Component{
         }
         this.nameChange=this.nameChange.bind(this);
         this.sexChange=this.sexChange.bind(this);
-        this.telChange=this.telChange.bind(this);
+        this.emailChange=this.emailChange.bind(this);
         this.deparChange=this.deparChange.bind(this);
         this.typeChange=this.typeChange.bind(this);
         this.allowLogin=this.allowLogin.bind(this);
@@ -56,7 +56,7 @@ class EditEmployee extends React.Component{
         if(data.uid){//如果props中有uid，则说明是页面为用户编辑
             this.data.uid=data.uid;
             this.data.name=data.name;
-            this.data.tel=data.tel;
+            this.data.email=data.email;
             this.data.departId=data.departId;
             this.data.sex=data.sex;
             this.data.type=data.type;
@@ -64,7 +64,7 @@ class EditEmployee extends React.Component{
             this.intent='edit';
         }else{//如果props中没有uid，则当前页面为用户新增
             this.data.name='';
-            this.data.tel='';
+            this.data.email='';
             this.data.departId=0;
             this.data.sex=1;
             this.data.type=0;
@@ -80,8 +80,9 @@ class EditEmployee extends React.Component{
     nameChange(e,value){
         this.data.name=value;
     }
-    telChange(value,str){
-        this.data.tel=value;
+    emailChange(value,str){
+        if(!str)
+            this.data.email=value;
     }
     sexChange(value){
         this.data.sex=value;
@@ -113,8 +114,8 @@ class EditEmployee extends React.Component{
             W.alert(___.person_name+' '+___.not_null);
             return;
         }
-        if(data.tel==''){
-            W.alert(___.cellphone+' '+___.not_null);
+        if(data.email==''){
+            W.alert(___.input_account);
             return;
         }
         if(data.departId==0){
@@ -125,7 +126,7 @@ class EditEmployee extends React.Component{
         this.data={
             uid:'',
             name:'',
-            tel:'',
+            email:'',
             sex:1,
             departId:0,
             type:0,
@@ -142,7 +143,7 @@ class EditEmployee extends React.Component{
                 <p style={{fontSize:'0.75em', color:'rgba(0, 0, 0, 0.498039)',marginBottom:'0px'}}>{___.sex}</p>
                 <SexRadio style={{paddingTop:'10px'}} value={this.data.sex} onChange={this.sexChange}/>
                 
-                <PhoneInput floatingLabelText={___.phone} value={this.data.tel} onChange={this.telChange} />
+                <EmailInput floatingLabelText={___.email} value={this.data.email} onChange={this.emailChange} />
                 
                 <p style={{fontSize:'0.75em', color:'rgba(0, 0, 0, 0.498039)'}}>{___.department}</p>
                 <DepartmentSelcet value={this.data.departId} onChange={this.deparChange}/>

@@ -12,7 +12,6 @@ let keys=W.getCookie('_app_config_');
 try {
     keys=JSON.parse(keys);
     Object.assign(CONFIG,keys);
-    ___.app_name=CONFIG.name;
 } catch (error) {
     alert('app key error');
 }
