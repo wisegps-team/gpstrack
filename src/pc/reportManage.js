@@ -485,7 +485,7 @@ class HistoryReports extends React.Component{
             </TableRow>);
         return(
             <div>
-                <Table fixedHeader={true} height={this.state.total_page>1?styles.table_height+'px':'auto'}>
+                <Table fixedHeader={true}>
                     <TableHeader style={{borderTop:'solid 1px #cccccc'}} displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn style={{width:'15%'}} >{___.carNum}</TableHeaderColumn>
@@ -645,7 +645,7 @@ class AlertReports extends React.Component{
             </TableRow>);
         return(
             <div>
-                <Table fixedHeader={true} height={this.state.total_page>1?styles.table_height+'px':'auto'}>
+                <Table fixedHeader={true}>
                     <TableHeader style={{borderTop:'solid 1px #cccccc'}} displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn style={{width:'20%'}}>{___.alert_type}</TableHeaderColumn>
@@ -807,7 +807,7 @@ class SpeedReports extends React.Component{
             </TableRow>);
         return(
             <div>
-                <Table fixedHeader={true} height={this.state.total_page>1?styles.table_height+'px':'auto'}>
+                <Table fixedHeader={true}>
                     <TableHeader style={{borderTop:'solid 1px #cccccc'}} displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn style={{width:'15%'}}>{___.carNum}</TableHeaderColumn>

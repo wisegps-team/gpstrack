@@ -367,10 +367,9 @@ class Cars extends React.Component{
                     <ActionDelete onClick={()=>this.deleteCar(ele)}/>
                 </TableRowColumn>
             </TableRow>);
-        //vehicleItems.push(<TableRow key={-1}/>);//最后加上一条空的信息，防止最下面一个车辆元素右侧图标被“添加”按钮挡住,实测证明，挡不住
         return(
             <div>
-                <Table height={styles.tableHeight+'px'} fixedHeader={true}>
+                <Table fixedHeader={true}>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow key={0}>
                             <TableHeaderColumn>{___.carNum}</TableHeaderColumn>

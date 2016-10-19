@@ -360,7 +360,7 @@ class EmployeeTable extends React.Component{
         });
         return(
             <div style={styles.table_main}>
-                <Table fixedHeader={true} height={this.props.totalPage>1?styles.table_height+'px':'auto'}>
+                <Table fixedHeader={true}>
                     <TableHeader style={{borderTop:'solid 1px #cccccc'}} displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn >{___.person_name}</TableHeaderColumn>
