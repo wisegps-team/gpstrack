@@ -66,11 +66,15 @@ class CarItem extends React.Component {
 function formatStopTime(stop_time){
     stop_time=stop_time/1000/60;
     if(stop_time < 60){
-        return stop_time.toFixed(0) + ___.m;
+        stop_time=stop_time.toFixed(0);
+        stop_time=(stop_time<10)?'0'+stop_time.toString():stop_time.toString();
+        return stop_time+ ___.m;
     }else{
-        var stop_hour = stop_time / 60;
-        var stop_min = stop_time % 60;
-        return stop_hour.toFixed(0) + ___.h + stop_min.toFixed(0) + ___.m;
+        var stop_hour = (stop_time / 60).toFixed(0);
+        var stop_min = (stop_time % 60).toFixed(0);
+        stop_hour=(stop_hour<10)?'0'+stop_hour.toString():stop_hour.toString();
+        stop_min=(stop_min<10)?'0'+stop_min.toString():stop_min.toString();
+        return stop_hour + ___.h + stop_min + ___.m;
     }
 }
 

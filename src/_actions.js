@@ -50,6 +50,7 @@ export const ACT ={
         getDevices:function(cars){
             return function(dispatch) {
                 let device_ids=cars.map(car=>car.did);
+                device_ids=device_ids.filter(e=>!!e);
                 Wapi.device.list(function(res){
                     var devices=res.data;
                     dispatch(ACT.fun.getedDevices(devices));
